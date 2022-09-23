@@ -154,7 +154,7 @@ def decodageSonAri(val, prob, length):
     while len(msg_decode) < length:
         # search for the index
         idx = 0
-        print(prob)
+        
         while val >= prob[idx,1]:
             idx += 1
         

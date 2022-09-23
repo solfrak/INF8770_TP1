@@ -20,6 +20,6 @@ import numpy as np
 
 message = [87, 73, 75, 73]
 
-output, dum1, dumb2 = utils.codeAri(message, False)
+val, prob, long = utils.codeAri(message, False)
 
-print(utils.decodageSonAri(output, dum1, dumb2))
+print(utils.decodageSonAri(val, prob, long))
