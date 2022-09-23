@@ -85,7 +85,9 @@ def codeAri(input, isImage):
         if not list(filter(lambda x: x[0] == Message[i], ProbSymb)):
             ProbSymb += [[Message[i], ProbSymb[-1][1]+Message.count(Message[i])/len(Message)]]
             nbsymboles += 1
-    longueurOriginale = np.ceil(np.log2(nbsymboles))*len(Message)
+    longueurOriginale = len(input)
+    if isImage:
+        longueurOriginale = np.ceil(np.log2(nbsymboles))*len(Message)
 
     Code = ProbSymb[:]
     Code = [['', 0]] + ProbSymb[:]
@@ -154,23 +156,20 @@ def decodageSonAri(val, prob, length):
     while len(msg_decode) < length:
         # search for the index
         idx = 0
-        
-        while val >= prob[idx,1]:
+        while val >= prob[idx][1]:
             idx += 1
         
         #get the symbol
-        carac = prob[idx, 0]
+        carac = prob[idx][0]
         msg_decode.append(carac)
 
         #update the value
         if idx == 0:
-            val /= prob[idx,1]
+            val /= prob[idx][1]
         else:
-            val = (val - prob[idx-1,1])/(prob[idx,1]-prob[idx-1,1])
+            val = (val - prob[idx-1][1])/(prob[idx][1]-prob[idx-1][1])
     
     return(msg_decode)
-
-
 
 
 
