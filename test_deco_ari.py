@@ -51,11 +51,6 @@ def codageAri1D(input):
     return valfinale
 
 
-
-    
-
-
-
 message = [87, 73, 75, 73]
 
 # val, prob, long = utils.codeAri(message, False)
