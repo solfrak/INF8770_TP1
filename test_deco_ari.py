@@ -1,10 +1,25 @@
+from ctypes import util
+from email import message
 import utils
+import numpy as np
 
-val = 0.17
+# val = 0.17
 
-prob = np.array([['W',0.25],['I',0.75],['K',1]])
+# prob = np.array([[ord('W'),0.25],[ord('I'),0.75],[ord('K'),1]])
+# length = 4
 
-length = 4
+# msg_decode = utils.decodageSonAri(val, prob, length)
+# print(msg_decode)
 
+# message = np.zeros(4)
 
-msg_decode = utils.decodageSonAri(val, prob, length)
+# message[0] = 87
+# message[0] = 73
+# message[0] = 75
+# message[0] = 73
+
+message = [87, 73, 75, 73]
+
+output, dum1, dumb2 = utils.codeAri(message, False)
+
+print(utils.decodageSonAri(output, dum1, dumb2))

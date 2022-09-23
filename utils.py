@@ -73,8 +73,11 @@ def codeImagePred(image, matpred):
     print(f'Le nombre de valeur differente est de: {counter}')
     return 1 - (counter / 256)
 
-def codeAri(input):
-    Message = array.array('f', input.flatten())
+def codeAri(input, isImage):
+    Message = input
+    if isImage:
+        Message = array.array('f', input.flatten())
+    
     ProbSymb =[[Message[0], Message.count(Message[0])/len(Message)]]
     nbsymboles = 1
 
@@ -82,7 +85,6 @@ def codeAri(input):
         if not list(filter(lambda x: x[0] == Message[i], ProbSymb)):
             ProbSymb += [[Message[i], ProbSymb[-1][1]+Message.count(Message[i])/len(Message)]]
             nbsymboles += 1
-    
     longueurOriginale = np.ceil(np.log2(nbsymboles))*len(Message)
 
     Code = ProbSymb[:]
@@ -117,7 +119,7 @@ def codeAri(input):
         messagecode = float_dec2bin(valfinale) #Essayer d'autres valeurs qui tombent dans l'intervalle
         print(f'La longueur du message encode est de: {len(messagecode)} et la longueur du message original est de : {longueurOriginale}')
         # return 1 - (len(messagecode) / longueurOriginale)
-        return valfinale, ProbSymb
+        return valfinale, ProbSymb, longueurOriginale
 
 
 def codagePred1D(input):
@@ -152,7 +154,8 @@ def decodageSonAri(val, prob, length):
     while len(msg_decode) < length:
         # search for the index
         idx = 0
-        while val > prob[idx,1]:
+        print(prob)
+        while val >= prob[idx,1]:
             idx += 1
         
         #get the symbol
