@@ -2,6 +2,8 @@ import array
 from math import floor
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy.interpolate import interp1d
+
 
 def rgb2gray(rgb):
     return np.dot(rgb[:,:],[0.299, 0.587, 0.114])
@@ -120,8 +122,8 @@ def codeAri(input, isImage):
 
         messagecode = float_dec2bin(valfinale) #Essayer d'autres valeurs qui tombent dans l'intervalle
         print(f'La longueur du message encode est de: {len(messagecode)} et la longueur du message original est de : {longueurOriginale}')
-        # return 1 - (len(messagecode) / longueurOriginale)
-        return valfinale, ProbSymb, longueurOriginale
+        return 1 - (len(messagecode) / longueurOriginale)
+        # return valfinale, ProbSymb, longueurOriginale
 
 
 def codagePred1D(input):
@@ -139,7 +141,7 @@ def codagePred1D(input):
         if i != 0:
             counter += 1
     print(f'Le nombre de valeur differente est de: {counter}')
-    return 1 - (counter / (max(input) - min(input)))
+    return 1 - (counter / (max(input) - min(input) + 1))
     # return erreur
 
 def decodageSonPred(arrayErreur):
@@ -170,6 +172,65 @@ def decodageSonAri(val, prob, length):
             val = (val - prob[idx-1][1])/(prob[idx][1]-prob[idx-1][1])
     
     return(msg_decode)
+
+
+def customCount(list, valeur):
+    compteur = 0
+    for i in list:
+        if i == valeur:
+            compteur += 1
+    return compteur
+def calculateProb(message):
+   
+    myDict = {}
+    for i in range(0, len(message)):
+        if not myDict.get(message[i]):
+            myDict.update({message[i] : customCount(message, message[i]) / len(message)})
+    for i, code in enumerate(myDict):
+        if not i == 0:
+            myDict[code] = myDict[code] + myDict[list(myDict)[i - 1]]
+    return myDict
+
+
+def codageAri1D(input):
+    message = input
+    dict = calculateProb(message)
+    code = dict.copy()
+
+    min = 0
+    max = 1
+    for i in message:
+        max = code[i]
+        if list(dict).index(i) >= 1:
+            min = code[list(dict)[list(dict).index(i) - 1]]
+        
+        myMap = interp1d([0, 1], [min, max])
+        for j in code:
+            code[j] = float(myMap(dict[j]))
+    print(f'My value should be beetween: {min} and {max}')
+
+    ok = True
+    valfinale = 0
+    valEnBits = list('')
+    p = 0
+    while ok:
+        p += 1
+        if min == max:
+            valfinale = min
+            break
+        #Essayer différentes sommes de puissance négative de 2
+        valfinale += np.power(2.0,-p)
+        valEnBits += '1' 
+        if valfinale >= (min + (max - min)):
+            valfinale -= np.power(2.0,-p) #Hors de la borne maximale, on annule l'ajout.
+            valEnBits[-1] ='0'
+        elif valfinale >= min :
+            ok = False
+    messagecode = float_dec2bin(valfinale)
+    longueurOriginale = len(input)
+    print(f'La longueur du message encode est de: {len(messagecode)} et la longueur du message original est de : {longueurOriginale}')
+
+    return valfinale
 
 
 

@@ -3,7 +3,7 @@ import random
 import numpy as np
 import matplotlib.pyplot as py
 import array as arr
-from utils import codagePred1D, codeAri
+from utils import codagePred1D, codageAri1D, codeAri
 
 
 
@@ -20,21 +20,27 @@ for i in range(mess_len):
 
 message1_ASCII =np.zeros(mess_len)
 message2_ASCII =np.zeros(mess_len)
+
+message1_str = ""
+message2_str = ""
 for i, char in enumerate(message1):
     message1_ASCII[i] = ord(char)
+    message1_str += char
 
 for i, char in enumerate(message2):
     message2_ASCII[i] = ord(char)
+    message2_str += char
 
 
 message1_ouptut_pred = codagePred1D(message1_ASCII)
-message1_ouptut_ari = codeAri(message1_ASCII)
+
+message1_ouptut_ari = codageAri1D(message1_str)
 
 print(message1_ouptut_pred)
 print(message1_ouptut_ari)
 
 message2_ouptut_pred = codagePred1D(message2_ASCII)
-message2_ouptut_ari = codeAri(message2_ASCII)
+message2_ouptut_ari = codeAri(message2_str, False)
 
 print(message2_ouptut_pred)
 print(message2_ouptut_ari)
